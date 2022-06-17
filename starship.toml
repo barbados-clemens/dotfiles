@@ -1,0 +1,51 @@
+# Don't print a new line at the start of the prompt
+add_newline = true
+
+# Replace the "❯" symbol in the prompt with "➜"
+[character]                            # The name of the module we are configuring is "character"
+success_symbol = "[➜](bold green) "
+error_symbol = "[✗](bold red) "
+
+# format = "$all"
+
+[battery]
+full_symbol = "🔋"
+charging_symbol = "⚡️"
+# discharging_symbol = "💀"
+
+[[battery.display]]
+threshold = 10
+style = "bold red"
+
+[[battery.display]]
+threshold = 30
+style = "bold yellow"
+
+
+[cmd_duration]
+min_time = 500
+format = "took [$duration](bold yellow)"
+
+[memory_usage]
+disabled = false
+show_percentage = true
+show_swap = false
+threshold = -1
+symbol = " "
+separator = "/"
+style = "bold dimmed green"
+format = "$symbol [${ram}]($style)"
+
+[git_commit]
+commit_hash_length = 5
+
+[nodejs]
+format = "with [⬢ $version](bold green)"
+
+[time]
+disabled = false
+format = "[\\[ $time \\]]($style) "
+use_12hr = true
+time_format = "%b%e%l:%M %P"
+# utc_time_offset = "-5"
+# time_range = "10:00:00-14:00:00"

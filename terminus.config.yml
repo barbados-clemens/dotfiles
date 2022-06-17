@@ -1,0 +1,79 @@
+# rename me to config.yaml and move to /Users/calebukle/Library/Application Support/terminus/
+terminal:
+  colorScheme:
+    name: Firewatch
+    foreground: '#9ba2b2'
+    background: '#1e2027'
+    cursor: '#f6f7ec'
+    colors:
+      - '#585f6d'
+      - '#d95360'
+      - '#5ab977'
+      - '#dfb563'
+      - '#4d89c4'
+      - '#d55119'
+      - '#44a8b6'
+      - '#e6e5ff'
+      - '#585f6d'
+      - '#d95360'
+      - '#5ab977'
+      - '#dfb563'
+      - '#4c89c5'
+      - '#d55119'
+      - '#44a8b6'
+      - '#e6e5ff'
+  font: Fira Code Retina
+  ligatures: true
+  environment: {}
+  profiles:
+    - name: Powershell
+      shell: custom
+      sessionOptions:
+        command: /usr/local/bin/pwsh
+        args: []
+        env: {}
+hotkeys:
+  shell: {}
+  profile: {}
+  toggle-window: []
+serial: {}
+ssh:
+  connections:
+    - name: 56KModem
+      group: HOME
+      host: 192.168.1.9
+      port: 22
+      user: caleb
+      algorithms:
+        hmac:
+          - hmac-sha2-256
+          - hmac-sha2-512
+          - hmac-sha1
+        kex:
+          - ecdh-sha2-nistp256
+          - ecdh-sha2-nistp384
+          - ecdh-sha2-nistp521
+          - diffie-hellman-group-exchange-sha256
+          - diffie-hellman-group14-sha256
+          - diffie-hellman-group16-sha512
+          - diffie-hellman-group18-sha512
+          - diffie-hellman-group14-sha1
+        cipher:
+          - aes128-ctr
+          - aes192-ctr
+          - aes256-ctr
+          - aes128-gcm
+          - aes128-gcm@openssh.com
+          - aes256-gcm
+          - aes256-gcm@openssh.com
+        serverHostKey:
+          - ssh-ed25519
+          - ecdsa-sha2-nistp256
+          - ecdsa-sha2-nistp384
+          - ecdsa-sha2-nistp521
+          - ssh-rsa
+      scripts: []
+      auth: password
+appearance: {}
+enableWelcomeTab: false
+pluginBlacklist: []
