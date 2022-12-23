@@ -1,0 +1,8 @@
+reload('barbados-clemens.remap')
+reload('barbados-clemens.set')
+reload('barbados-clemens.colors')
+reload('barbados-clemens.treesitter')
+reload('barbados-clemens.linters')
+reload('barbados-clemens.formatters')
+reload('barbados-clemens.lsp')
+reload('barbados-clemens.plugins')
