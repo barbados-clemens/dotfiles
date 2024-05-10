@@ -5,81 +5,16 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# If you come from bash you might have to change your $PATH.
+export HOMEBREW_NO_AUTO_UPDATE=true
 export PNPM_HOME="/Users/caleb/Library/pnpm"
-export PATH=$HOME/bin:/usr/local/bin:/opt/homebrew/bin:$HOME/.jetbrains:$HOME/.cargo/bin:$HOME/.local/bin/:$PNPM_HOME:$PATH
+export PATH="$HOME/bin:/usr/local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.jetbrains:$HOME/.cargo/bin:$HOME/.local/bin/:$HOME/.deno/bin:$PNPM_HOME:/opt/homebrew/opt/openjdk/bin:$PATH"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-# ZSH_THEME="robbyrussell"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
-
-# Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git
   nx-completion
@@ -88,42 +23,18 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
-export EDITOR="lvim"
-# User configuration
+export EDITOR="nvim"
 
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vim="$EDITOR"
 alias rzsh="source ~/.zshrc && confetti"
 alias lg="lazygit"
+alias ls="eza -x1h -F=always --group-directories-first --icons"
+alias ll="eza -lhl -F=always --group-directories-first --icons"
+alias tree="ls -T"
 alias zshconfig="$EDITOR ~/.zshrc"
 alias c="clear"
-alias nxr="yarn nx-release && confetti"
-alias ylrE="yarn local-registry enable"
-alias ylrD="yarn local-registry disable"
-alias ylrG="yarn local-registry enable && yarn local-registry start"
-alias ylrS="yarn local-registry start"
+alias nxr="pnpm run nx-release && confetti"
+alias ylrG="pnpm run local-registry"
 alias h="cd ~"
 alias w="cd ~/Code"
 alias sb="cd ~/Code/sandbox"
@@ -135,19 +46,80 @@ alias p="peek"
 alias bathelp="bat -p --language=help"
 alias confetti="open raycast://confetti"
 alias ip="ipconfig getifaddr en0 && curl ifconfig.me ; echo"
-alias pnx="pnpm nx"
+# alias pnx="pnpm nx"
 alias v="$EDITOR ."
 alias gan="git commit --amend --no-verify --no-edit -v"
 alias ncu="npx npm-check-updates -i"
 alias toot="toot tui"
 alias "cm"="chezmoi"
-alias nx-check="npx nx format && npx nx affected --targets=lint,test,build --parallel=10"
+alias nx-check="nx format && nx affected --targets=lint,test,build,typecheck --parallel=10"
+alias repo="view_repo"
+alias $=" "
+alias copilot="github-copilot-cli"
+alias spotify="spt"
+
+nx() {
+  nx_json="nx.json"
+  current_dir="$PWD"
+
+  while [ true ]; do
+    if [ -e "$current_dir/$nx_json" ]; then
+
+      echo -e "\e[97;44mRunning Nx in $current_dir\e[0m"
+
+      if [ -f "$current_dir/node_modules/.bin/nx" ]; then
+        "$current_dir/node_modules/.bin/nx" "$@"
+      elif [ -f "$current_dir/pnpm-lock.yaml" ]; then
+        pnpm nx "$@"
+      elif [ -f "$current_dir/yarn.lock" ]; then
+        yarn nx "$@"
+      else
+        npx nx "$@"
+      fi
+
+      break
+    fi
+
+  parent_dir=$(dirname "$current_dir")
+
+  if [ "$parent_dir" = "$current_dir" ]; then
+    echo -e "\e[30;41mCould not find nx.json in any parent directory. Are you in a Nx workspace?\e[0m"
+    break
+  fi
+
+    current_dir="$parent_dir"
+  done
+
+}
 
 help() {
   "$@" --help 2>&1 | bathelp
 }
 
+view_repo() {
+  git_remote="$(git remote -v | grep origin | grep fetch | awk '{print $2}')" 
+  url=""
 
+  # if the url starts with https then just replace the .git ending
+  if [[ "$git_remote" =~ ^https.* ]]; then
+    url=$(sed -e 's/\.git//' <<< $git_remote)
+  else
+    # other wise we are using ssh and it starts with git@
+    url=$(sed -e 's/:/\//' -e 's/^git@/https:\/\//' -e 's/\.git$//' <<< $git_remote)
+  fi
+
+  echo "Opening $url..."
+
+  open "$url"
+}
+
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/caleb/gcloud-sdk/path.zsh.inc' ]; then . '/Users/caleb/gcloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/caleb/gcloud-sdk/completion.zsh.inc' ]; then . '/Users/caleb/gcloud-sdk/completion.zsh.inc'; fi
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -155,3 +127,5 @@ export NVM_DIR="$HOME/.nvm"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+
