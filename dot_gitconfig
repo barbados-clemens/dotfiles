@@ -1,0 +1,45 @@
+[user]
+	name = Caleb Ukle
+	email = caleb.ukle+github@pm.me
+	signingkey = D9136EE87A5E5DE7
+
+
+[includeIf "gitdir:~/Code/barbados-clemens/"]
+  path = ~/Code/barbados-clemens/.gitconfig
+
+[includeIf "gitdir:~/Work/"]
+  path = ~/Work/.gitconfig
+
+[core]
+	editor = lvim
+	pager = diff-so-fancy | less --tabs=4 -RFX
+[diff]
+	tool = vimdiff
+[commit]
+	gpgsign = false
+[interactive]
+	diffFilter = diff-so-fancy --patch
+[color]
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = 11
+	frag = magenta bold
+	func = 146 bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[init]
+	defaultBranch = main
+[alias]
+	uniqUser = shortlog --since=90.days -sne
+  sync = !git fetch upstream --prune && git rebase upstream/
+[push]
+	autoSetupRemote = true
+[rerere]
+	enabled = true

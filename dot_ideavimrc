@@ -1,0 +1,15 @@
+let mapleader = " "
+
+set NERDTree
+set which-key
+set clipboard+=unnamed
+
+map <leader>e <Action>(ActivateProjectToolWindow)
+map <leader>gr <Action>(RenameElement)
+map <leader>la <Action>(ShowIntentionActions)
+map <leader>le <Action>(ExpandRegionRecursively)
+map : <Action>(GotoAction)
+map <leader>c <Action>(CloseContent)
+map :w <Action>(SaveDocument)
+map :wa <Action>(SaveAll)
+

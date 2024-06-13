@@ -20,6 +20,7 @@ packages:
       - "fd"
     casks:
       - "1password-cli"
+      - "1password"
       - "balenaetcher"
       - "cleanshot"
       - "discord"
