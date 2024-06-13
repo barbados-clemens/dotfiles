@@ -31,3 +31,4 @@ packages:
       - "slack"
       - "spotify"
       - "zoom"
+      - "superhuman"
