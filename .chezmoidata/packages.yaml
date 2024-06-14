@@ -2,6 +2,10 @@ packages:
   darwin:
     brews:
       - "bat"
+      - "gh"
+      - "eza"
+      - "go"
+      - "pipx"
       - "codespell"
       - "deno"
       - "diff-so-fancy"
