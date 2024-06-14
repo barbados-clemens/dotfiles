@@ -23,6 +23,7 @@ return {
 
       local luasnip = require("luasnip")
       local cmp = require("cmp")
+      -- TODO(caleb): how to remove the 'Snippet' auto suggestions from the autocomplete list?
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
         ["<Tab>"] = cmp.mapping(function(fallback)
