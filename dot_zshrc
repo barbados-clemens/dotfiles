@@ -11,6 +11,7 @@ export PATH="$HOME/bin:/usr/local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$HOME
 export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
 # lazygit config goes in here
 export XDG_CONFIG_HOME="$HOME/.config"
+export COREPACK_ENABLE_AUTO_PIN=0
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"

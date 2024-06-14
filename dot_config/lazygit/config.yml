@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/jesseduffield/lazygit/master/schema/config.json
-
+promptToReturnFromSubprocess: false
 os:
-  editPreset: 'nvim'
+  editPreset: "nvim"
 git:
   paging:
     colorArg: always

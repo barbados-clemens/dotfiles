@@ -1,12 +1,10 @@
 [user]
 	name = Caleb Ukle
 	email = caleb.ukle+github@pm.me
+  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDTA8FvOobyddvvEKOhFBCt7LQAMCqr1CKDF2Xc2W5de
 
 [includeIf "gitdir:~/Work/"]
   path = ~/Work/.gitconfig
-
-[user]
-  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDTA8FvOobyddvvEKOhFBCt7LQAMCqr1CKDF2Xc2W5de
 
 [gpg]
   format = ssh
