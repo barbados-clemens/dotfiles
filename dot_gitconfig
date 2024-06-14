@@ -1,22 +1,27 @@
 [user]
 	name = Caleb Ukle
 	email = caleb.ukle+github@pm.me
-	signingkey = D9136EE87A5E5DE7
-
-
-[includeIf "gitdir:~/Code/barbados-clemens/"]
-  path = ~/Code/barbados-clemens/.gitconfig
 
 [includeIf "gitdir:~/Work/"]
   path = ~/Work/.gitconfig
 
+[user]
+  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDTA8FvOobyddvvEKOhFBCt7LQAMCqr1CKDF2Xc2W5de
+
+[gpg]
+  format = ssh
+
+[gpg "ssh"]
+  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+
+[commit]
+  gpgsign = true
+
 [core]
-	editor = lvim
+	editor = neovim
 	pager = diff-so-fancy | less --tabs=4 -RFX
 [diff]
 	tool = vimdiff
-[commit]
-	gpgsign = false
 [interactive]
 	diffFilter = diff-so-fancy --patch
 [color]
