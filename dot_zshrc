@@ -61,6 +61,7 @@ alias repo="view_repo"
 alias $=" "
 alias copilot="github-copilot-cli"
 alias 1p="op"
+alias rename_pics="exiftool -r '-FileName<DateTimeOriginal' -d '%Y-%m-%d_%H-%M-%S%%-c.%%e'"
 
 nx() {
   nx_json="nx.json"
