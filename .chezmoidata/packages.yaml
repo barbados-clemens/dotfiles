@@ -42,6 +42,7 @@ packages:
       - "raycast"
       - "slack"
       - "spotify"
+      - "plexamp"
       - "vlc"
       - "logseq"
       - "protonvpn"
