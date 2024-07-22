@@ -41,7 +41,6 @@
 	defaultBranch = main
 [alias]
 	uniqUser = shortlog --since=90.days -sne
-  sync = !git fetch upstream --prune && git rebase upstream/
 [push]
 	autoSetupRemote = true
 [rerere]
