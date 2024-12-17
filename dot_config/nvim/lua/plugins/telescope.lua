@@ -1,5 +1,3 @@
-local Util = require("lazyvim.util")
-
 return {
   {
     "telescope.nvim",
@@ -29,8 +27,20 @@ return {
       },
     },
     keys = {
-      { "<leader><space>", Util.telescope("files", { cwd = false }), desc = "Find Files (root dir)" },
-      { "<leader>fF", Util.telescope("files"), desc = "Find Files (cwd)" },
+      {
+        "<leader><space>",
+        function()
+          require("telescope.builtin").find_files({ cwd = false })
+        end,
+        desc = "Find Files (root dir)",
+      },
+      {
+        "<leader>fF",
+        function()
+          require("telescope.builtin").find_files({ hidden = true })
+        end,
+        desc = "Find Files (cwd)",
+      },
       {
         "<leader>ff",
         function()
