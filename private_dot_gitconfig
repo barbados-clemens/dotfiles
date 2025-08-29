@@ -1,10 +1,13 @@
 [user]
 	name = Caleb Ukle
 	email = caleb.ukle+github@pm.me
-  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDTA8FvOobyddvvEKOhFBCt7LQAMCqr1CKDF2Xc2W5de
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGOoD3SXjoM5qcKE8c3fegIfQfhZPJA5h/myet0dVaGy
 
 [includeIf "gitdir:~/Work/"]
   path = ~/Work/.gitconfig
+
+[includeIf "gitdir:~/Personal/"]
+  path = ~/Personal/.gitconfig
 
 [gpg]
   format = ssh
@@ -47,3 +50,8 @@
 	enabled = true
 [remote "origin"]
 	prune = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
