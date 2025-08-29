@@ -1,5 +1,7 @@
 packages:
   darwin:
+    taps:
+      - sst/tap/opencode
     brews:
       - "bat"
       - "gh"
@@ -22,6 +24,7 @@ packages:
       - "neovim"
       - "ripgrep"
       - "fd"
+      - "libvips"
     casks:
       - "arc"
       - "adobe-creative-cloud"
@@ -32,7 +35,6 @@ packages:
       - "discord"
       - "docker"
       - "handbrake"
-      - "iterm2"
       - "loom"
       - "linear-linear"
       - "synology-drive"
@@ -41,11 +43,14 @@ packages:
       - "notion"
       - "raycast"
       - "slack"
+      - "zed"
+      - "claude"
+      - "claude-code"
       - "spotify"
-      - "plexamp"
+      - "ghostty"
       - "vlc"
-      - "logseq"
-      - "protonvpn"
+      - "obsidian"
+      # - "protonvpn"
       - "mongodb-compass"
       - "zoom"
       - "superhuman"

@@ -21,5 +21,8 @@ brew {{ . | quote }}
 {{ range .packages.darwin.casks -}}
 cask {{ . | quote }}
 {{ end -}}
+{{ range .packages.darwin.taps -}}
+install {{ . | quote }}
+{{ end -}}
 EOF
 {{ end -}}
