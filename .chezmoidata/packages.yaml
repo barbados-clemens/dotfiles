@@ -1,7 +1,5 @@
 packages:
   darwin:
-    taps:
-      - sst/tap/opencode
     brews:
       - "bat"
       - "gh"
