@@ -23,6 +23,8 @@ packages:
       - "ripgrep"
       - "fd"
       - "libvips"
+      - "elixir"
+      - "rebar3"
     casks:
       - "arc"
       - "adobe-creative-cloud"
@@ -39,6 +41,7 @@ packages:
       - "jetbrains-toolbox"
       - "royal-tsx"
       - "notion"
+      - "notion-calendar"
       - "raycast"
       - "slack"
       - "microsoft-teams"
