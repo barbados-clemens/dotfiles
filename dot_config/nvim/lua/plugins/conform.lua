@@ -1,57 +1,44 @@
-if true then
-  return {}
-end
-local slow_format_filetypes = {}
-
 return {
   {
     "stevearc/conform.nvim",
-    optional = true,
-    opts = {
-      formatters_by_ft = {
-        ["javascript"] = { { "prettierd", "prettier" } },
-        ["javascriptreact"] = { { "prettierd", "prettier" } },
-        ["typescript"] = { { "prettierd", "prettier" } },
-        ["typescriptreact"] = { { "prettierd", "prettier" } },
-        ["vue"] = { { "prettierd", "prettier" } },
-        ["css"] = { { "prettierd", "prettier" } },
-        ["scss"] = { { "prettierd", "prettier" } },
-        ["less"] = { { "prettierd", "prettier" } },
-        ["html"] = { { "prettierd", "prettier" } },
-        ["json"] = { { "prettierd", "prettier" } },
-        ["jsonc"] = { { "prettierd", "prettier" } },
-        ["yaml"] = { { "prettierd", "prettier" } },
-        ["markdown"] = { { "prettierd", "prettier" } },
-        ["markdown.mdx"] = { { "prettierd", "prettier" } },
-        ["graphql"] = { { "prettierd", "prettier" } },
-        ["handlebars"] = { { "prettierd", "prettier" } },
-      },
-    },
-
-    format_on_save = function(bufnr)
-      -- Disable autoformat for files in a certain path
-      local bufname = vim.api.nvim_buf_get_name(bufnr)
-      if bufname:match("/node_modules/") then
-        return
-      end
-
-      if slow_format_filetypes[vim.bo[bufnr].filetype] then
-        return
-      end
-      local function on_format(err)
-        if err and err:match("timeout$") then
-          slow_format_filetypes[vim.bo[bufnr].filetype] = true
-        end
-      end
-
-      return { timeout_ms = 200, lsp_fallback = true }, on_format
-    end,
-
-    format_after_save = function(bufnr)
-      if not slow_format_filetypes[vim.bo[bufnr].filetype] then
-        return
-      end
-      return { lsp_fallback = true }
+    opts = function(_, opts)
+      local util = require("conform.util")
+      
+      opts.formatters = opts.formatters or {}
+      opts.formatters.prettier = {
+        command = function(self, ctx)
+          local cmd = util.from_node_modules("prettier")(self, ctx)
+          if cmd then
+            return cmd
+          end
+          return "prettier"
+        end,
+        args = function(self, ctx)
+          local args = { "--stdin-filepath", "$FILENAME" }
+          local config_path = vim.fn.findfile(".prettierrc", ctx.dirname .. ";")
+          if config_path == "" then
+            config_path = vim.fn.findfile(".prettierrc.json", ctx.dirname .. ";")
+          end
+          if config_path == "" then
+            config_path = vim.fn.findfile("prettier.config.js", ctx.dirname .. ";")
+          end
+          if config_path == "" then
+            config_path = vim.fn.findfile("package.json", ctx.dirname .. ";")
+          end
+          
+          if config_path ~= "" then
+            table.insert(args, "--config")
+            table.insert(args, vim.fn.fnamemodify(config_path, ":p"))
+          end
+          
+          return args
+        end,
+        cwd = function(self, ctx)
+          return vim.fn.fnamemodify(vim.fn.finddir(".git/..", ctx.dirname .. ";"), ":p:h")
+        end,
+      }
+      
+      return opts
     end,
   },
 }

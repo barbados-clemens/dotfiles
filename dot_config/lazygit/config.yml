@@ -6,3 +6,4 @@ git:
   paging:
     colorArg: always
     pager: diff-so-fancy
+  autoForwardBranches: "none"
