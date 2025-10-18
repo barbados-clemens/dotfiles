@@ -2,7 +2,7 @@ font-size=18
 cursor-style=block
 cursor-color=#00FF00
 shell-integration-features=no-cursor
-theme=tokyonight_moon
+theme="TokyoNight Moon"
 confirm-close-surface=false
-font-family="MonoLisa"
+font-family="Essential PragmataPro"
 keybind = shift+enter=text:\x1b\r
