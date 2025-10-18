@@ -4,6 +4,5 @@ os:
   editPreset: "nvim"
 git:
   paging:
-    colorArg: always
-    pager: diff-so-fancy
+    externalDiffCommand: difft --display inline --context 3 --color always
   autoForwardBranches: "none"
