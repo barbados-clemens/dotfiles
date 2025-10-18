@@ -74,6 +74,12 @@ exif_json() {
 }
 
 nx() {
+  # Check if 'nx' directory exists and cd into it
+  if [ -d "nx" ]; then
+    cd nx
+    return 0
+  fi
+
   nx_json="nx.json"
   current_dir="$PWD"
 
