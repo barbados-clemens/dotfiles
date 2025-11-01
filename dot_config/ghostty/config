@@ -1,8 +1,14 @@
 font-size=18
+# adjust spacing between chars
+adjust-cell-width=-5%
+# remove the special ligatures for maple font's @ $ % & chars 
+# while keeping ligatures for others i.e. => and === and !=
+font-feature=cv01,+calt
 cursor-style=block
 cursor-color=#00FF00
 shell-integration-features=no-cursor
 theme="TokyoNight Moon"
 confirm-close-surface=false
-font-family="Essential PragmataPro"
+# font-family="Essential PragmataPro"
+font-family="Maple Mono NF"
 keybind = shift+enter=text:\x1b\r
