@@ -1,15 +1,28 @@
 [tools]
 usage = "latest"
-node = "lts"
+node = { version = "lts", postinstall = "npx corepack enable && echo \"corepack enabled!\"" }
 dotnet = "9"
 awscli = "latest"
-deno = "latest"
-claude = "latest"
-
-[hooks]
-postinstall = "npx corepack enable"
+deno = "2"
+claude = "2"
+bat = "latest"
+difftastic = "latest"
+elixir = "1"
+eza = "latest"
+fd = "latest"
+ffmpeg = "latest"
+fzf = "latest"
+gh = "latest"
+go = "1"
+hyperfine = "latest"
+jq = "latest"
+lazygit = "latest"
+neovim = "0.11"
+ripgrep = "latest"
+shellcheck = "latest"
+uv = "latest"
 
 [settings]
-# This must be enabled to make the hooks work
+# This must be enabled to make the hooks work appropriately
 experimental = true
 lockfile = true
