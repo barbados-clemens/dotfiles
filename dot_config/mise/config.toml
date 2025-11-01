@@ -1,0 +1,15 @@
+[tools]
+usage = "latest"
+node = "lts"
+dotnet = "9"
+awscli = "latest"
+deno = "latest"
+claude = "latest"
+
+[hooks]
+postinstall = "npx corepack enable"
+
+[settings]
+# This must be enabled to make the hooks work
+experimental = true
+lockfile = true
