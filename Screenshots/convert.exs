@@ -3,7 +3,8 @@ Mix.install([:image])
 defmodule ImgConvert do
   def main({opts, args, _invalid}) do
     args
-    |> Enum.each(&convert_to(opts, &1))
+    |> Enum.map(&Task.async(fn -> convert_to(opts, &1) end))
+    |> Task.await_many()
   end
 
   def convert_to(options, file_path) do
@@ -52,7 +53,17 @@ defmodule ImgConvert do
           png: [effort: 8]
         )
 
-        IO.puts("Successfully converted #{filename} to #{Path.basename(new_file_path)}")
+        original_file_size =
+          File.stat!(file_path)
+          |> format_bytes()
+
+        converted_file_size =
+          File.stat!(new_file_path)
+          |> format_bytes()
+
+        IO.puts(
+          "✅ #{filename} (#{original_file_size}) -> #{Path.basename(new_file_path)} (#{converted_file_size})"
+        )
       end
     rescue
       e ->
@@ -62,6 +73,13 @@ defmodule ImgConvert do
         File.rm(file_path)
       end
     end
+  end
+
+  defp format_bytes(%{:size => bytes}) when is_integer(bytes) do
+    units = ["Bytes", "KiB", "MiB", "GiB"]
+    i = floor(:math.log(bytes) / :math.log(1024))
+
+    "#{round(bytes / :math.pow(1024, i))} #{Enum.at(units, i)}"
   end
 end
 
