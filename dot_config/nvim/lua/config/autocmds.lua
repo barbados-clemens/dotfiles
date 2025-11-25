@@ -23,3 +23,12 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
   end,
   desc = "Set .mdoc files as markdown",
 })
+
+-- Associate .jsonc files with jsonc filetype
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = "*.jsonc",
+  callback = function()
+    vim.bo.filetype = "jsonc"
+  end,
+  desc = "Set jsonc files as jsonc",
+})
