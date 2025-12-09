@@ -33,5 +33,23 @@
   "buffer_font_features": {
     "calt": true,
     "cv01": true
+  },
+  "lsp": {
+    "expert": {
+      "binary": {
+        "arguments": ["--stdio"]
+      }
+    }
+  },
+  "languages": {
+    "Elixir": {
+      "language_servers": [
+        "expert",
+        "!elixir-ls",
+        "!next-ls",
+        "!lexical",
+        "..."
+      ]
+    }
   }
 }
