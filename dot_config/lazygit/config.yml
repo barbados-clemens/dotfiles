@@ -3,6 +3,6 @@ promptToReturnFromSubprocess: false
 os:
   editPreset: "nvim"
 git:
-  paging:
-    externalDiffCommand: difft --display inline --context 3 --color always
+  pagers:
+    - externalDiffCommand: difft --display inline --context 3 --color always
   autoForwardBranches: "none"
