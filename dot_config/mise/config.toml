@@ -7,7 +7,7 @@ deno = "2"
 claude = "2"
 bat = "latest"
 difftastic = "latest"
-elixir = "1.18"
+elixir = "1.19.4-otp-28"
 eza = "latest"
 fd = "latest"
 ffmpeg = "latest"
@@ -24,6 +24,7 @@ uv = "latest"
 opencode = "latest"
 jj = "latest"
 "cargo:tree-sitter-cli" = "latest"
+erlang = "28.3"
 
 [settings]
 # This must be enabled to make the hooks work appropriately

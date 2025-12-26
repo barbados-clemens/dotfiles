@@ -46,8 +46,12 @@ version = "9.0.308"
 backend = "asdf:dotnet"
 
 [[tools.elixir]]
-version = "1.18.4-otp-28"
+version = "1.19.4-otp-28"
 backend = "core:elixir"
+
+[[tools.erlang]]
+version = "28.3"
+backend = "core:erlang"
 
 [[tools.eza]]
 version = "0.23.4"
