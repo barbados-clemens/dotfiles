@@ -40,6 +40,7 @@ alias ll="eza -lhl -F=always --group-directories-first --icons"
 alias tree="ls -T"
 alias zshconfig="$EDITOR ~/.zshrc"
 alias editconfig="$EDITOR ~/.config/"
+alias config="cd ~/.config"
 alias c="clear"
 alias nxr="pnpm run nx-release && confetti"
 alias ylrG="pnpm run local-registry"
@@ -87,7 +88,7 @@ nx() {
   while [ true ]; do
     if [ -e "$current_dir/$nx_json" ]; then
 
-      # check if output is being piped 
+      # check if output is being piped
       if [ -t 1 ]; then
         echo -e "\e[97;44mRunning Nx in $current_dir\e[0m"
       fi
@@ -123,7 +124,7 @@ help() {
 }
 
 view_repo() {
-  git_remote="$(git remote -v | grep origin | grep fetch | awk '{print $2}')" 
+  git_remote="$(git remote -v | grep origin | grep fetch | awk '{print $2}')"
   url=""
 
   # if the url starts with https then just replace the .git ending
@@ -140,11 +141,6 @@ view_repo() {
 }
 
 
-
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
@@ -154,7 +150,7 @@ eval "$(op completion zsh)"; compdef _op op
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 
-# 1pass 
+# 1pass
 source ~/.config/op/plugins.sh
 
 # The next line updates PATH for the Google Cloud SDK.
