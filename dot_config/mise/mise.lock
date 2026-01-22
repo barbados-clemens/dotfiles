@@ -1,10 +1,7 @@
 [[tools.awscli]]
-version = "2.32.23"
+version = "2.33.4"
 backend = "aqua:aws/aws-cli"
-"platforms.linux-arm64" = { url = "https://awscli.amazonaws.com/AWSCLIV2-2.32.23.pkg"}
-"platforms.linux-x64" = { url = "https://awscli.amazonaws.com/AWSCLIV2-2.32.23.pkg"}
-"platforms.macos-arm64" = { url = "https://awscli.amazonaws.com/AWSCLIV2-2.32.23.pkg"}
-"platforms.macos-x64" = { url = "https://awscli.amazonaws.com/AWSCLIV2-2.32.23.pkg"}
+"platforms.macos-arm64" = { checksum = "blake3:5cf5d30cfa93c6078560b84c41c2cbcdd4857c9b10c44553eb5a540573bda25e", url = "https://awscli.amazonaws.com/AWSCLIV2-2.33.4.pkg"}
 
 [[tools.bat]]
 version = "0.26.1"
@@ -20,17 +17,14 @@ version = "0.26.3"
 backend = "cargo:tree-sitter-cli"
 
 [[tools.claude]]
-version = "2.0.76"
-backend = "npm:@anthropic-ai/claude-code"
+version = "2.1.15"
+backend = "http:claude"
+"platforms.macos-arm64" = { checksum = "blake3:5336bdca37429b9d99fb407528f68ceb6b79b575522f6ba2391b7f46c1f7e66c", url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.15/darwin-arm64/claude"}
 
 [[tools.deno]]
-version = "2.6.3"
+version = "2.6.5"
 backend = "core:deno"
-"platforms.linux-arm64" = { checksum = "sha256:92c9496e8c71e6b18abf1f728d6223bb682749e4946f24589a7ef8972fec423e", url = "https://dl.deno.land/release/v2.6.3/deno-aarch64-unknown-linux-gnu.zip"}
-"platforms.linux-x64" = { checksum = "sha256:b3c24dc6f3982607896bd795fd6bcbdc53f3d11e8d8190b2a07fd1881eb1148a", url = "https://dl.deno.land/release/v2.6.3/deno-x86_64-unknown-linux-gnu.zip"}
-"platforms.macos-arm64" = { checksum = "sha256:7fdc01002a90a6ac58b8936e5d7a872fa7885db71d51bac7f776b7b790c82085", url = "https://dl.deno.land/release/v2.6.3/deno-aarch64-apple-darwin.zip"}
-"platforms.macos-x64" = { checksum = "sha256:3942e5af4d25588b506f49155278239c9fa09e7683a912ca091a346a1fc40733", url = "https://dl.deno.land/release/v2.6.3/deno-x86_64-apple-darwin.zip"}
-"platforms.windows-x64" = { checksum = "sha256:Algorithm", url = "https://dl.deno.land/release/v2.6.3/deno-x86_64-pc-windows-msvc.zip"}
+"platforms.macos-arm64" = { checksum = "blake3:780d347547eb4d102eb06ba1a3fa752cdaa4fba78d1aa7ae7e3dc3fdc01897f8"}
 
 [[tools.difftastic]]
 version = "0.67.0"
@@ -42,7 +36,7 @@ backend = "aqua:Wilfred/difftastic"
 "platforms.windows-x64" = { checksum = "sha256:5fd7aa37ce90f838fb91f6e4b2765ac9cad0a7e9d1dccc5b19529fd6b4cbf8b4", url = "https://github.com/Wilfred/difftastic/releases/download/0.67.0/difft-x86_64-pc-windows-msvc.zip"}
 
 [[tools.dotnet]]
-version = "9.0.308"
+version = "9.0.310"
 backend = "asdf:dotnet"
 
 [[tools.elixir]]
@@ -80,13 +74,9 @@ backend = "aqua:junegunn/fzf"
 "platforms.windows-x64" = { checksum = "sha256:cad95326ed416d14226a03425513b049f5bc9a41f30a355e5fe204a29e666867", url = "https://github.com/junegunn/fzf/releases/download/v0.67.0/fzf-0.67.0-windows_amd64.zip"}
 
 [[tools.gh]]
-version = "2.83.2"
+version = "2.86.0"
 backend = "aqua:cli/cli"
-"platforms.linux-arm64" = { checksum = "sha256:b1a0c0a0fcf18524e36996caddc92a062355ed014defc836203fe20fba75a38e", url = "https://github.com/cli/cli/releases/download/v2.83.2/gh_2.83.2_linux_arm64.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:ca6e7641214fbd0e21429cec4b64a7ba626fd946d8f9d6d191467545b092015e", url = "https://github.com/cli/cli/releases/download/v2.83.2/gh_2.83.2_linux_amd64.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:ba3e0396ebbc8da17256144ddda503e4e79c8b502166335569f8390d6b75fa8d", url = "https://github.com/cli/cli/releases/download/v2.83.2/gh_2.83.2_macOS_arm64.zip"}
-"platforms.macos-x64" = { checksum = "sha256:6f1712519ccc768946791dc97da407bf188582345b73fef3d604d050ebf6f614", url = "https://github.com/cli/cli/releases/download/v2.83.2/gh_2.83.2_macOS_amd64.zip"}
-"platforms.windows-x64" = { checksum = "sha256:b95bf2d953e3bf497bb2c0aed97ffcc5ed8471b80f0920d663a92a6111f05135", url = "https://github.com/cli/cli/releases/download/v2.83.2/gh_2.83.2_windows_amd64.zip"}
+"platforms.macos-arm64" = { checksum = "sha256:bde753978a352c5ae6c4abec47334d516e82807af20c9dbbd45507a5a0aedaaa", url = "https://github.com/cli/cli/releases/download/v2.86.0/gh_2.86.0_macOS_arm64.zip"}
 
 [[tools.go]]
 version = "1.25.5"
@@ -125,13 +115,9 @@ backend = "aqua:jqlang/jq"
 "platforms.windows-x64" = { checksum = "sha256:23cb60a1354eed6bcc8d9b9735e8c7b388cd1fdcb75726b93bc299ef22dd9334", url = "https://github.com/jqlang/jq/releases/download/jq-1.8.1/jq-windows-amd64.exe"}
 
 [[tools.lazygit]]
-version = "0.57.0"
+version = "0.58.1"
 backend = "aqua:jesseduffield/lazygit"
-"platforms.linux-arm64" = { checksum = "sha256:6bc14dcfafe943363226ed2a2c222d5dda68247acc9bdc382d129dd7fe98f985", url = "https://github.com/jesseduffield/lazygit/releases/download/v0.57.0/lazygit_0.57.0_linux_arm64.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:ced011ecd1459d069c66128fbf172b7248c8b99d8983fa17d84a247a98146d5e", url = "https://github.com/jesseduffield/lazygit/releases/download/v0.57.0/lazygit_0.57.0_linux_x86_64.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:e90dd90c37bb012f1fe708e7f3d32d28747c8638c75a45268734c5e33277c3d0", url = "https://github.com/jesseduffield/lazygit/releases/download/v0.57.0/lazygit_0.57.0_darwin_arm64.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:c34dd41ba01007b3684fd84761f7103dba4af087785200fa1d355a253acd31a2", url = "https://github.com/jesseduffield/lazygit/releases/download/v0.57.0/lazygit_0.57.0_darwin_x86_64.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:775a210b3becd262a067d75be33d3d0ecd58cbc2dde3a36ca74e4757b080618c", url = "https://github.com/jesseduffield/lazygit/releases/download/v0.57.0/lazygit_0.57.0_windows_x86_64.zip"}
+"platforms.macos-arm64" = { checksum = "sha256:d93a8a217a51f26d0a643a97bd31e3fabcb2e3a78cdbf1f1e533b9cd8bc881ce", url = "https://github.com/jesseduffield/lazygit/releases/download/v0.58.1/lazygit_0.58.1_darwin_arm64.tar.gz"}
 
 [[tools.neovim]]
 version = "0.11.5"
@@ -152,13 +138,14 @@ backend = "core:node"
 "platforms.windows-x64" = { checksum = "sha256:1054540bce22b54ec7e50ebc078ec5d090700a77657607a58f6a64df21f49fdd", url = "https://nodejs.org/dist/v24.11.0/node-v24.11.0-win-x64.zip"}
 
 [[tools.opencode]]
-version = "1.0.203"
+version = "1.1.31"
 backend = "aqua:sst/opencode"
-"platforms.linux-arm64" = { checksum = "sha256:12915dd69fad31d314cf65b0b3aec6948c9f5b8c058bd67546e5518a37d59aa3", url = "https://github.com/sst/opencode/releases/download/v1.0.203/opencode-linux-arm64.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:9cb830a175888ad71d2fa76250809e797eb099e289cce4ebf0a1b2b4680c3c78", url = "https://github.com/sst/opencode/releases/download/v1.0.203/opencode-linux-x64.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:614691141b00223ea61e08165c4672f3d7b00876e90c42f36aad1c6e359bbc99", url = "https://github.com/sst/opencode/releases/download/v1.0.203/opencode-darwin-arm64.zip"}
-"platforms.macos-x64" = { checksum = "sha256:beb6c8c759282a4cdd1ae3e1bd1870d4bb3cd1a57dc0b9be02bd7706c267f1fa", url = "https://github.com/sst/opencode/releases/download/v1.0.203/opencode-darwin-x64.zip"}
-"platforms.windows-x64" = { checksum = "sha256:46c061e6b8298f7b178329ebc6059f261d158a89d1988cd05c78c356878c0887", url = "https://github.com/sst/opencode/releases/download/v1.0.203/opencode-windows-x64.zip"}
+"platforms.macos-arm64" = { checksum = "sha256:db617034ebbc5f0b6051df4461a3ed2993b61ffc38688bb547767629ba1ea72d", url = "https://github.com/anomalyco/opencode/releases/download/v1.1.31/opencode-darwin-arm64.zip"}
+
+[[tools.resvg]]
+version = "0.46.0"
+backend = "aqua:linebender/resvg"
+"platforms.macos-arm64" = { checksum = "sha256:65784035b922fe4230681bc5e2ccb00b6b0ac36622a0d1b5c22ab75cefa60a91", url = "https://github.com/linebender/resvg/releases/download/v0.46.0/resvg-macos-x86_64.zip"}
 
 [[tools.ripgrep]]
 version = "15.1.0"
@@ -179,12 +166,9 @@ backend = "aqua:koalaman/shellcheck"
 "platforms.windows-x64" = { checksum = "sha256:8a4e35ab0b331c85d73567b12f2a444df187f483e5079ceffa6bda1faa2e740e", url = "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.zip"}
 
 [[tools.usage]]
-version = "2.10.0"
+version = "2.13.1"
 backend = "aqua:jdx/usage"
-"platforms.linux-arm64" = { checksum = "sha256:e15423a85dbf198a3d6fd8a20d455e97a3150be18a1c5b9f73e88f819d76f0a9", url = "https://github.com/jdx/usage/releases/download/v2.10.0/usage-aarch64-unknown-linux-musl.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:91ac3f7f40ab3ed6d50134dff8a7c0935911a6c109469118624f38afb2e1731a", url = "https://github.com/jdx/usage/releases/download/v2.10.0/usage-x86_64-unknown-linux-musl.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:ddc213010a02d464a7136f941781660ebeb9b36e5d6f85ccdd4783d730127797", url = "https://github.com/jdx/usage/releases/download/v2.10.0/usage-universal-apple-darwin.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:ddc213010a02d464a7136f941781660ebeb9b36e5d6f85ccdd4783d730127797", url = "https://github.com/jdx/usage/releases/download/v2.10.0/usage-universal-apple-darwin.tar.gz"}
+"platforms.macos-arm64" = { checksum = "sha256:5c9a1b72fb87907da5bb8e829c00090485ef08b99579a6008bb685dc3414318d", url = "https://github.com/jdx/usage/releases/download/v2.13.1/usage-universal-apple-darwin.tar.gz"}
 
 [[tools.uv]]
 version = "0.9.18"
@@ -194,3 +178,13 @@ backend = "aqua:astral-sh/uv"
 "platforms.macos-arm64" = { checksum = "sha256:dc3bee4abbb3bac267a3985a23ea7617d19d41ff381dbaf560ba415ad65af68f", url = "https://github.com/astral-sh/uv/releases/download/0.9.18/uv-aarch64-apple-darwin.tar.gz"}
 "platforms.macos-x64" = { checksum = "sha256:f86836c637333c65bbc7902acc9c49888eef9fbd15dccbc1946b10e30b041073", url = "https://github.com/astral-sh/uv/releases/download/0.9.18/uv-x86_64-apple-darwin.tar.gz"}
 "platforms.windows-x64" = { checksum = "sha256:28cbe5d30907a774bfe27a517a39b494ec6f7d3816bda8bbf6f9645490449182", url = "https://github.com/astral-sh/uv/releases/download/0.9.18/uv-x86_64-pc-windows-msvc.zip"}
+
+[[tools.yazi]]
+version = "26.1.4"
+backend = "aqua:sxyazi/yazi"
+"platforms.macos-arm64" = { checksum = "sha256:04ef51ee7865b5b34f242cbc03f6ab8978b4f9c41e42899e3e886cfccd8b5fb0", url = "https://github.com/sxyazi/yazi/releases/download/v26.1.4/yazi-aarch64-apple-darwin.zip"}
+
+[[tools.zoxide]]
+version = "0.9.8"
+backend = "aqua:ajeetdsouza/zoxide"
+"platforms.macos-arm64" = { checksum = "blake3:225180129d7d87f7d55eaaf13b065e8ac95123347734e41c01da13ade4b4664f", url = "https://github.com/ajeetdsouza/zoxide/releases/download/v0.9.8/zoxide-0.9.8-aarch64-apple-darwin.tar.gz"}
