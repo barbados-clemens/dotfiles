@@ -40,6 +40,7 @@ alias ll="eza -lhl -F=always --group-directories-first --icons"
 alias tree="ls -T"
 alias zshconfig="$EDITOR ~/.zshrc"
 alias editconfig="$EDITOR ~/.config/"
+alias notes="cd ~/Documents/notes"
 alias config="cd ~/.config"
 alias c="clear"
 alias nxr="pnpm run nx-release && confetti"
@@ -158,5 +159,3 @@ if [ -f '/opt/homebrew/share/google-cloud-sdk/path.zsh.inc' ]; then . '/opt/home
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/opt/homebrew/share/google-cloud-sdk/completion.zsh.inc' ]; then . '/opt/homebrew/share/google-cloud-sdk/completion.zsh.inc'; fi
-
-eval "$(mise activate zsh)"
