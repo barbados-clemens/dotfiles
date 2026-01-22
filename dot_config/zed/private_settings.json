@@ -39,6 +39,18 @@
       "binary": {
         "arguments": ["--stdio"]
       }
+    },
+    "opencode": {
+      "binary": {
+        "path": "opencode",
+        "arguments": ["lsp"]
+      }
+    },
+    "kotlin-language-server": {
+      "binary": {
+        "path": "kotlin-language-server",
+        "arguments": []
+      }
     }
   },
   "languages": {
@@ -48,6 +60,12 @@
         "!elixir-ls",
         "!next-ls",
         "!lexical",
+        "..."
+      ]
+    },
+    "Kotlin": {
+      "language_servers": [
+        "kotlin-language-server",
         "..."
       ]
     }
