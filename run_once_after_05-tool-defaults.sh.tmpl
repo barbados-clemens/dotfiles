@@ -1,0 +1,6 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+
+npm config -g set ignore-scripts true
+echo "tool defaults applied. Some changes may require restarting shell."
+{{ end -}}
