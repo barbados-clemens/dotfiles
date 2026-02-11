@@ -1,0 +1,27 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+
+# macos.yaml hash: {{ include ".chezmoidata/macos.yaml" | sha256sum }}
+
+osascript -e 'tell application "System Settings" to quit' 2>/dev/null || true
+
+sudo -v
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
+# Apply user defaults
+{{ range .macos.defaults -}}
+defaults write "{{ .domain }}" "{{ .key }}" -{{ .type }} {{ .value }}
+{{ end }}
+
+# Apply sudo defaults
+{{ range .macos.sudo_defaults -}}
+sudo defaults write "{{ .domain }}" "{{ .key }}" -{{ .type }} {{ .value }}
+{{ end }}
+
+# Post-apply commands
+{{ range .macos.post_commands -}}
+{{ . }}
+{{ end }}
+
+echo "macOS defaults applied. Some changes may require logout/restart."
+{{ end -}}
