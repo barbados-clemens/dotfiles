@@ -30,7 +30,7 @@ macos:
     - { domain: "com.apple.finder", key: "FXEnableExtensionChangeWarning", type: "bool", value: "false" }
     - { domain: "com.apple.finder", key: "DisableAllAnimations", type: "bool", value: "true" }
     - { domain: "com.apple.finder", key: "NewWindowTarget", type: "string", value: "PfLo" }
-    - { domain: "com.apple.finder", key: "NewWindowTargetPath", type: "string", value: "file://${HOME}/" }
+    - { domain: "com.apple.finder", key: "NewWindowTargetPath", type: "string", value: "file:///Users/caleb/" }
     - { domain: "com.apple.finder", key: "ShowExternalHardDrivesOnDesktop", type: "bool", value: "true" }
     - { domain: "com.apple.finder", key: "ShowHardDrivesOnDesktop", type: "bool", value: "true" }
     - { domain: "com.apple.finder", key: "ShowMountedServersOnDesktop", type: "bool", value: "true" }

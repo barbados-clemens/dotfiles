@@ -31,6 +31,7 @@ plugins=(
 source $ZSH/oh-my-zsh.sh
 export EDITOR="nvim"
 
+alias claude="claude --remote-control --chrome"
 # prevnet issues where ghostty TERM string isn't reconginzed by some boxes
 alias ssh="TERM=xterm-256color ssh"
 alias vim="$EDITOR"

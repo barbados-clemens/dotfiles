@@ -5,6 +5,10 @@
 - After completing multi-step work, verify the result actually meets the original request (run tests, re-read changed files, etc.).
 - After completing multi-step work from a plan, run `/simplify` to review changed code for reuse, quality, and efficiency.
 
+## Secrets
+
+- Pylon API key: retrieve via `op read "op://Private/Pylon API Key/password"` — never hardcode or store in plaintext.
+
 ## Tool preferences
 
 - When running shell commands, use `rg` (ripgrep) instead of `grep` for searching file contents.
