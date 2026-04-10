@@ -6,4 +6,9 @@ if ! command -v brew &>/dev/null; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Accept Xcode license if needed (required by some brew packages)
+if command -v xcodebuild &>/dev/null; then
+  sudo xcodebuild -license accept 2>/dev/null || true
+fi
 {{ end -}}
