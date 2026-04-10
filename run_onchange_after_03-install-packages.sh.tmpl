@@ -5,7 +5,7 @@ set -euo pipefail
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # packages hash: {{ include "Brewfile" | sha256sum }}
-brew bundle --no-lock --file="{{ .chezmoi.homeDir }}/Brewfile"
+brew bundle --file="{{ .chezmoi.homeDir }}/Brewfile"
 
 eval "$(mise activate bash)"
 mise install --yes
