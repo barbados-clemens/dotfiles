@@ -1,0 +1,21 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+set -euo pipefail
+
+# dock hash: {{ include ".chezmoidata/dock.yaml" | sha256sum }}
+
+echo "Setting up Dock layout..."
+
+# Remove all current dock items
+dockutil --remove all --no-restart
+
+# Add configured apps
+{{ range .dock.apps -}}
+dockutil --add "{{ . }}" --no-restart
+{{ end }}
+
+# Restart Dock to apply
+killall Dock
+
+echo "Dock layout applied."
+{{ end -}}

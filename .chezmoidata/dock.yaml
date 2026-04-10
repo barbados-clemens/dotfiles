@@ -1,0 +1,5 @@
+dock:
+  apps:
+    - /System/Applications/Messages.app
+    - /System/Applications/System Settings.app
+    - /System/Applications/iPhone Mirroring.app

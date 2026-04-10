@@ -2,6 +2,7 @@ tap "mongodb/brew"
 tap "sst/tap"
 brew "codespell"
 brew "diff-so-fancy"
+brew "dockutil"
 brew "exiftool"
 brew "ghostscript"
 brew "git"
@@ -10,6 +11,7 @@ brew "htop"
 brew "http-prompt"
 brew "luarocks"
 brew "magic-wormhole"
+brew "mas"
 brew "mise"
 brew "openjdk@21"
 brew "prettierd"
@@ -56,6 +58,11 @@ cask "vlc"
 cask "zed"
 cask "zen"
 cask "zoom"
+mas "Keynote", id: 409183694
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+mas "Toggl Track", id: 1291898086
+mas "Xcode", id: 497799835
 go "cmd/go"
 go "cmd/gofmt"
 cargo "tree-sitter-cli"
