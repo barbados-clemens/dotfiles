@@ -4,18 +4,8 @@ set -euo pipefail
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# packages hash: {{ include ".chezmoidata/packages.yaml" | sha256sum }}
-brew bundle --no-lock --file=/dev/stdin <<EOF
-{{ range .packages.darwin.taps -}}
-tap {{ . | quote }}
-{{ end -}}
-{{ range .packages.darwin.brews -}}
-brew {{ . | quote }}
-{{ end -}}
-{{ range .packages.darwin.casks -}}
-cask {{ . | quote }}
-{{ end -}}
-EOF
+# packages hash: {{ include "Brewfile" | sha256sum }}
+brew bundle --no-lock --file="{{ .chezmoi.homeDir }}/Brewfile"
 
 eval "$(mise activate bash)"
 mise install --yes
