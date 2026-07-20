@@ -10,5 +10,5 @@ shell-integration-features=no-cursor
 theme="TokyoNight Moon"
 confirm-close-surface=false
 # font-family="Essential PragmataPro"
-font-family="Maple Mono NF"
+font-family="BerkeleyMono Nerd Font Mono"
 keybind = shift+enter=text:\x1b\r
