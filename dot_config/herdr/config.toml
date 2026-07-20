@@ -1,0 +1,23 @@
+onboarding = false
+
+[terminal]
+new_cwd = "follow"
+
+[keys]
+remove_worktree = "prefix+alt+g"
+
+[[keys.command]]
+key = "prefix+shift+l"
+type = "plugin_action"
+command = "caleb.workspace-layout.choose"
+description = "choose workspace layout"
+
+[ui.toast]
+delivery = "terminal"
+
+[ui]
+show_agent_labels_on_pane_borders = true
+
+[theme]
+name = "terminal"
+auto_switch = false
