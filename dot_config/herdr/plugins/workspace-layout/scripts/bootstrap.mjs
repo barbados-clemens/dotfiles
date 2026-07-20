@@ -10,6 +10,8 @@ export const steps = [
     name: "mise",
     files: ["mise.toml", ".mise.toml"],
     command: ["mise", "install"],
+    trustConfigs: true,
+    activatesMise: true,
   },
   {
     name: "pnpm",
@@ -48,15 +50,15 @@ export const steps = [
   },
 ];
 
-function failureMessage(step, result) {
+function failureMessage(name, result) {
   if (result.error) {
-    return `unable to run ${step.name}: ${result.error.message}`;
+    return `unable to run ${name}: ${result.error.message}`;
   }
   if (result.signal) {
-    return `${step.name} terminated by signal ${result.signal}`;
+    return `${name} terminated by signal ${result.signal}`;
   }
   if (result.status !== 0) {
-    return `${step.name} failed with exit code ${result.status}`;
+    return `${name} failed with exit code ${result.status}`;
   }
   return undefined;
 }
@@ -70,14 +72,39 @@ export function runBootstrap({
 } = {}) {
   const completedGroups = new Set();
   let attempted = 0;
+  let miseActive = false;
   let warnings = 0;
+
+  const execute = ({ name, command, allowFailure = false }) => {
+    stdout.write(`\nworkspace setup: ${command.join(" ")}\n`);
+    const result = runCommand(command[0], command.slice(1), {
+      stdio: "inherit",
+    });
+    const failure = failureMessage(name, result);
+    if (!failure) {
+      return { succeeded: true };
+    }
+
+    if (!allowFailure) {
+      stderr.write(`workspace setup: ${failure}\n`);
+      return {
+        succeeded: false,
+        exitCode: result.status ?? 1,
+      };
+    }
+
+    warnings += 1;
+    stderr.write(`workspace setup: warning: ${failure}; continuing\n`);
+    return { succeeded: false };
+  };
 
   for (const step of bootstrapSteps) {
     if (step.group && completedGroups.has(step.group)) {
       continue;
     }
 
-    if (!step.files.some((file) => fileExists(file))) {
+    const detectedFiles = step.files.filter((file) => fileExists(file));
+    if (detectedFiles.length === 0) {
       continue;
     }
 
@@ -85,27 +112,50 @@ export function runBootstrap({
       completedGroups.add(step.group);
     }
     attempted += 1;
-    stdout.write(`\nworkspace setup: ${step.command.join(" ")}\n`);
-    const result = runCommand(step.command[0], step.command.slice(1), {
-      stdio: "inherit",
-    });
-    const failure = failureMessage(step, result);
 
-    if (failure) {
+    if (step.trustConfigs) {
+      for (const configFile of detectedFiles) {
+        const trustResult = execute({
+          name: `${step.name} trust`,
+          command: ["mise", "trust", "--yes", configFile],
+        });
+        if (!trustResult.succeeded) {
+          return {
+            status: "failed",
+            exitCode: trustResult.exitCode,
+            step: step.name,
+            attempted,
+            warnings,
+          };
+        }
+      }
+    }
+
+    const command =
+      miseActive && !step.activatesMise
+        ? ["mise", "exec", "--", ...step.command]
+        : step.command;
+    const stepResult = execute({
+      name: step.name,
+      command,
+      allowFailure: step.allowFailure,
+    });
+
+    if (!stepResult.succeeded) {
       if (!step.allowFailure) {
-        stderr.write(`workspace setup: ${failure}\n`);
         return {
           status: "failed",
-          exitCode: result.status ?? 1,
+          exitCode: stepResult.exitCode,
           step: step.name,
           attempted,
           warnings,
         };
       }
-
-      warnings += 1;
-      stderr.write(`workspace setup: warning: ${failure}; continuing\n`);
       continue;
+    }
+
+    if (step.activatesMise) {
+      miseActive = true;
     }
   }
 

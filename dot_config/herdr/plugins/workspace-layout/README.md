@@ -32,6 +32,11 @@ Only one JavaScript package manager runs when multiple lockfiles exist.
 Bootstrap steps marked with `allowFailure: true` report a warning and allow the
 remaining setup steps to continue. Unmarked steps remain required.
 
+When a `mise.toml` or `.mise.toml` file exists, setup trusts only those exact
+workspace config files, runs `mise install`, and executes later setup commands
+through `mise exec --`. This makes newly installed tools available without
+waiting for the interactive shell environment to reload.
+
 ## Settings
 
 The bundled `settings.json` is the global default. Override it with either:

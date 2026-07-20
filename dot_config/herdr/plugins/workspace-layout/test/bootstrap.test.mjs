@@ -156,3 +156,125 @@ test("does not fall through to another step in the same group", () => {
   assert.equal(result.exitCode, 0);
   assert.equal(result.warnings, 1);
 });
+
+test("trusts exact mise configs and runs later steps through mise exec", () => {
+  const commands = [];
+  const result = runBootstrap({
+    bootstrapSteps: [
+      {
+        name: "mise",
+        files: ["mise.toml", ".mise.toml"],
+        command: ["mise", "install"],
+        trustConfigs: true,
+        activatesMise: true,
+      },
+      {
+        name: "pnpm",
+        files: ["pnpm-lock.yaml"],
+        command: ["pnpm", "install", "--frozen-lockfile"],
+      },
+    ],
+    fileExists: (file) => file !== ".mise.toml",
+    runCommand(command, args) {
+      commands.push([command, ...args]);
+      return { status: 0 };
+    },
+    stdout: outputBuffer().stream,
+    stderr: outputBuffer().stream,
+  });
+
+  assert.deepEqual(commands, [
+    ["mise", "trust", "--yes", "mise.toml"],
+    ["mise", "install"],
+    ["mise", "exec", "--", "pnpm", "install", "--frozen-lockfile"],
+  ]);
+  assert.equal(result.exitCode, 0);
+  assert.equal(result.attempted, 2);
+});
+
+test("stops setup when trusting a mise config fails", () => {
+  const commands = [];
+  const stderr = outputBuffer();
+  const result = runBootstrap({
+    bootstrapSteps: [
+      {
+        name: "mise",
+        files: ["mise.toml"],
+        command: ["mise", "install"],
+        trustConfigs: true,
+        activatesMise: true,
+      },
+      {
+        name: "pnpm",
+        files: ["pnpm-lock.yaml"],
+        command: ["pnpm", "install"],
+      },
+    ],
+    fileExists: () => true,
+    runCommand(command, args) {
+      commands.push([command, ...args]);
+      return { status: 1 };
+    },
+    stdout: outputBuffer().stream,
+    stderr: stderr.stream,
+  });
+
+  assert.deepEqual(commands, [
+    ["mise", "trust", "--yes", "mise.toml"],
+  ]);
+  assert.deepEqual(result, {
+    status: "failed",
+    exitCode: 1,
+    step: "mise",
+    attempted: 1,
+    warnings: 0,
+  });
+  assert.match(stderr.value(), /mise trust failed with exit code 1/);
+});
+
+test("keeps allowed failures optional when run through mise", () => {
+  const commands = [];
+  const stderr = outputBuffer();
+  const result = runBootstrap({
+    bootstrapSteps: [
+      {
+        name: "mise",
+        files: ["mise.toml"],
+        command: ["mise", "install"],
+        trustConfigs: true,
+        activatesMise: true,
+      },
+      {
+        name: "cargo",
+        files: ["Cargo.toml"],
+        command: ["cargo", "install"],
+        allowFailure: true,
+      },
+    ],
+    fileExists: () => true,
+    runCommand(command, args) {
+      const invocation = [command, ...args];
+      commands.push(invocation);
+      return {
+        status:
+          invocation.join(" ") === "mise exec -- cargo install" ? 101 : 0,
+      };
+    },
+    stdout: outputBuffer().stream,
+    stderr: stderr.stream,
+  });
+
+  assert.deepEqual(commands.at(-1), [
+    "mise",
+    "exec",
+    "--",
+    "cargo",
+    "install",
+  ]);
+  assert.equal(result.exitCode, 0);
+  assert.equal(result.warnings, 1);
+  assert.match(
+    stderr.value(),
+    /warning: cargo failed with exit code 101; continuing/,
+  );
+});
