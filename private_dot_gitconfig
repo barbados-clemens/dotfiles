@@ -1,7 +1,7 @@
 [user]
 	name = Caleb Ukle
 	email = caleb.ukle+github@pm.me
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGOoD3SXjoM5qcKE8c3fegIfQfhZPJA5h/myet0dVaGy
+	signingkey = /Users/caleb/.ssh/id_ed25519_github
 
 [includeIf "gitdir:~/Work/"]
   path = ~/Work/.gitconfig
@@ -11,9 +11,6 @@
 
 [gpg]
   format = ssh
-
-[gpg "ssh"]
-  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 
 [commit]
   gpgsign = true

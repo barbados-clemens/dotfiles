@@ -50,6 +50,30 @@ export const steps = [
   },
 ];
 
+const annotations = {
+  step: { label: "workspace step", style: "1;30;46" },
+  warning: { label: "workspace warning", style: "1;30;43" },
+  error: { label: "workspace error", style: "1;97;41" },
+  done: { label: "workspace setup", style: "1;30;42" },
+  info: { label: "workspace setup", style: "1;30;47" },
+};
+
+function annotation(kind, message, useColor) {
+  const { label, style } = annotations[kind];
+  const badge = useColor
+    ? `\u001b[${style}m ${label} \u001b[0m`
+    : `[${label}]`;
+  return `${badge} ${message}\n`;
+}
+
+function supportsColor(stream, env) {
+  return (
+    stream.isTTY === true &&
+    !Object.hasOwn(env, "NO_COLOR") &&
+    env.TERM !== "dumb"
+  );
+}
+
 function failureMessage(name, result) {
   if (result.error) {
     return `unable to run ${name}: ${result.error.message}`;
@@ -69,6 +93,8 @@ export function runBootstrap({
   runCommand = spawnSync,
   stdout = process.stdout,
   stderr = process.stderr,
+  env = process.env,
+  useColor = supportsColor(stdout, env),
 } = {}) {
   const completedGroups = new Set();
   let attempted = 0;
@@ -76,7 +102,7 @@ export function runBootstrap({
   let warnings = 0;
 
   const execute = ({ name, command, allowFailure = false }) => {
-    stdout.write(`\nworkspace setup: ${command.join(" ")}\n`);
+    stdout.write(`\n${annotation("step", command.join(" "), useColor)}`);
     const result = runCommand(command[0], command.slice(1), {
       stdio: "inherit",
     });
@@ -86,7 +112,7 @@ export function runBootstrap({
     }
 
     if (!allowFailure) {
-      stderr.write(`workspace setup: ${failure}\n`);
+      stderr.write(annotation("error", failure, useColor));
       return {
         succeeded: false,
         exitCode: result.status ?? 1,
@@ -94,7 +120,9 @@ export function runBootstrap({
     }
 
     warnings += 1;
-    stderr.write(`workspace setup: warning: ${failure}; continuing\n`);
+    stderr.write(
+      annotation("warning", `${failure}; continuing`, useColor),
+    );
     return { succeeded: false };
   };
 
@@ -160,13 +188,19 @@ export function runBootstrap({
   }
 
   if (attempted === 0) {
-    stdout.write("workspace setup: no supported setup files found\n");
+    stdout.write(
+      annotation("info", "no supported setup files found", useColor),
+    );
   } else if (warnings > 0) {
     stdout.write(
-      `\nworkspace setup: complete with ${warnings} warning${warnings === 1 ? "" : "s"}\n`,
+      `\n${annotation(
+        "done",
+        `complete with ${warnings} warning${warnings === 1 ? "" : "s"}`,
+        useColor,
+      )}`,
     );
   } else {
-    stdout.write("\nworkspace setup: complete\n");
+    stdout.write(`\n${annotation("done", "complete", useColor)}`);
   }
 
   return {

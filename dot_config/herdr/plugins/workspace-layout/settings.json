@@ -18,7 +18,7 @@
               "id": "agent",
               "label": "agent",
               "existing": true,
-              "command": "bash \"{{plugin_root}}/scripts/select-agent.sh\" claude codex opencode"
+              "command": "bash \"{{plugin_root}}/scripts/select-agent.sh\" pi claude"
             }
           ]
         },
@@ -49,7 +49,7 @@
               "id": "agent",
               "label": "agent",
               "existing": true,
-              "command": "bash \"{{plugin_root}}/scripts/select-agent.sh\" claude codex opencode"
+              "command": "bash \"{{plugin_root}}/scripts/select-agent.sh\" pi claude"
             }
           ]
         }

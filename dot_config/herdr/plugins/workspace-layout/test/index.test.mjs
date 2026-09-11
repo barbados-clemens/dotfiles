@@ -203,6 +203,88 @@ test("applies two configured tabs and startup commands", async () => {
   assert.deepEqual(calls.at(-1), ["tab", "focus", "w1:t1"]);
 });
 
+test("automatic worktree layouts use the checkout path", async () => {
+  const calls = [];
+  const runHerdr = (args) => {
+    calls.push(args);
+    const command = args.slice(0, 2).join(" ");
+
+    if (command === "workspace get") {
+      return {
+        workspace: {
+          workspace_id: "w1",
+          active_tab_id: "w1:t1",
+          focused: true,
+          tab_count: 1,
+          pane_count: 1,
+          worktree: {
+            checkout_path: "/tmp/ocean-can-we-snapshot",
+          },
+        },
+      };
+    }
+    if (command === "pane list") {
+      return {
+        panes: [
+          {
+            workspace_id: "w1",
+            tab_id: "w1:t1",
+            pane_id: "w1:p1",
+            foreground_cwd: "/Users/caleb/.oh-my-zsh",
+            cwd: "/Users/caleb/.oh-my-zsh",
+          },
+        ],
+      };
+    }
+    if (command === "tab create") {
+      return {
+        type: "tab_created",
+        tab: { tab_id: "w1:t2" },
+        root_pane: { pane_id: "w1:p2", tab_id: "w1:t2" },
+      };
+    }
+    return { type: "ok" };
+  };
+
+  const result = await applyWorkspaceLayout({
+    env: {
+      HERDR_WORKSPACE_ID: "w1",
+      HERDR_PLUGIN_EVENT: "worktree.created",
+    },
+    runHerdr,
+    reuseInitialTab: true,
+    config: {
+      version: 1,
+      focus: "terminal",
+      tabs: [
+        {
+          id: "agent",
+          existing: true,
+          panes: [{ id: "agent", existing: true }],
+        },
+        {
+          id: "terminal",
+          panes: [{ id: "terminal", existing: true }],
+        },
+      ],
+    },
+  });
+
+  assert.equal(result.workspaceCwd, "/tmp/ocean-can-we-snapshot");
+  assert.deepEqual(
+    calls.find((args) => args[0] === "tab" && args[1] === "create"),
+    [
+      "tab",
+      "create",
+      "--workspace",
+      "w1",
+      "--cwd",
+      "/tmp/ocean-can-we-snapshot",
+      "--no-focus",
+    ],
+  );
+});
+
 test("manual layouts never run commands in the pre-existing pane", async () => {
   const calls = [];
   let createdTab = 1;
@@ -218,6 +300,9 @@ test("manual layouts never run commands in the pre-existing pane", async () => {
           focused: true,
           tab_count: 1,
           pane_count: 1,
+          worktree: {
+            checkout_path: "/tmp/worktree",
+          },
         },
       };
     }

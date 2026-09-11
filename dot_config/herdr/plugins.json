@@ -1,5 +1,91 @@
 [
   {
+    "plugin_id": "caleb.pylon-cases",
+    "name": "Pylon Cases",
+    "version": "0.1.0",
+    "min_herdr_version": "0.7.0",
+    "description": "Triage Pylon cases and open their local workspaces",
+    "manifest_path": "/Users/caleb/.config/herdr/plugins/pylon-cases/herdr-plugin.toml",
+    "plugin_root": "/Users/caleb/.config/herdr/plugins/pylon-cases",
+    "enabled": true,
+    "platforms": [
+      "macos",
+      "linux"
+    ],
+    "actions": [
+      {
+        "id": "open",
+        "title": "Open Pylon cases",
+        "contexts": [
+          "workspace"
+        ],
+        "command": [
+          "node",
+          "open-picker.mjs"
+        ]
+      }
+    ],
+    "panes": [
+      {
+        "id": "picker",
+        "title": "Pylon cases",
+        "placement": "popup",
+        "width": "95%",
+        "height": 30,
+        "command": [
+          "node",
+          "picker.mjs"
+        ]
+      }
+    ],
+    "source": {
+      "kind": "local"
+    }
+  },
+  {
+    "plugin_id": "caleb.sandbox-fleet",
+    "name": "Sandbox Fleet",
+    "version": "0.1.0",
+    "min_herdr_version": "0.7.0",
+    "description": "Dispatch, join, and tear down workdir microVM sandboxes from a popup",
+    "manifest_path": "/Users/caleb/.config/herdr/plugins/sandbox-fleet/herdr-plugin.toml",
+    "plugin_root": "/Users/caleb/.config/herdr/plugins/sandbox-fleet",
+    "enabled": true,
+    "platforms": [
+      "macos",
+      "linux"
+    ],
+    "actions": [
+      {
+        "id": "open",
+        "title": "Open sandbox fleet",
+        "contexts": [
+          "workspace"
+        ],
+        "command": [
+          "node",
+          "open-picker.mjs"
+        ]
+      }
+    ],
+    "panes": [
+      {
+        "id": "picker",
+        "title": "Sandbox fleet",
+        "placement": "popup",
+        "width": "70%",
+        "height": 22,
+        "command": [
+          "node",
+          "picker.mjs"
+        ]
+      }
+    ],
+    "source": {
+      "kind": "local"
+    }
+  },
+  {
     "plugin_id": "caleb.workspace-layout",
     "name": "Workspace Layout",
     "version": "0.2.0",

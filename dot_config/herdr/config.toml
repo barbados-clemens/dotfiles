@@ -5,6 +5,7 @@ new_cwd = "follow"
 
 [keys]
 remove_worktree = "prefix+alt+g"
+prefix = "ctrl+a"
 
 [[keys.command]]
 key = "prefix+shift+l"
@@ -12,12 +13,25 @@ type = "plugin_action"
 command = "caleb.workspace-layout.choose"
 description = "choose workspace layout"
 
+[[keys.command]]
+key = "prefix+shift+s"
+type = "plugin_action"
+command = "caleb.sandbox-fleet.open"
+description = "sandbox fleet"
+
+[[keys.command]]
+key = "prefix+shift+p"
+type = "plugin_action"
+command = "caleb.pylon-cases.open"
+description = "pylon cases"
+
 [ui.toast]
 delivery = "terminal"
 
 [ui]
 show_agent_labels_on_pane_borders = true
 
+agent_panel_sort = "spaces"
 [theme]
 name = "terminal"
 auto_switch = false

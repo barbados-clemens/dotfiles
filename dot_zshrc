@@ -32,15 +32,28 @@ plugins=(
 source $ZSH/oh-my-zsh.sh
 export EDITOR="nvim"
 
+# Give Pi one GitHub token for all child gh commands.
+# Keep the interactive gh alias on the 1Password shell plugin.
+function pi {
+  local gh_token="${GH_TOKEN:-}"
+
+  if [[ -z "$gh_token" ]]; then
+    gh_token="$(op plugin run -- gh auth token)" || return
+  fi
+
+  GH_TOKEN="$gh_token" command pi --tui-mode fullscreen "$@"
+}
+
 alias claude="claude --remote-control --chrome"
+alias opencode="opencode --auto"
 # prevnet issues where ghostty TERM string isn't reconginzed by some boxes
 alias ssh="TERM=xterm-256color ssh"
 alias vim="$EDITOR"
 alias rzsh="source ~/.zshrc && confetti"
 alias lg="lazygit"
 alias work="cd ~/Work/nrwl/"
-alias ls="eza -x1h -F=always --group-directories-first --icons"
-alias ll="eza -lhl -F=always --group-directories-first --icons"
+alias ls="eza -x1h -F=always --group-directories-first --icons=auto"
+alias ll="eza -lhl -F=always --group-directories-first --icons=auto"
 alias tree="ls -T"
 alias zshconfig="$EDITOR ~/.zshrc"
 alias editconfig="$EDITOR ~/.config/"
@@ -68,13 +81,35 @@ alias "cm"="chezmoi"
 alias nx-check="nx format && nx affected --targets=lint,test,testjs,build,typecheck --parallel=10"
 alias repo="view_repo"
 alias $=" "
-alias copilot="github-copilot-cli"
 alias 1p="op"
 alias rename_pics="exiftool -r '-FileName<DateTimeOriginal' -d '%Y-%m-%d_%H-%M-%S%%-c.%%e'"
 alias gpoint="git cherry main -v | head -n 1"
 alias cdroot='cd $(git rev-parse --show-toplevel)'
 alias strip-ansi="sed 's/\x1b\[[0-9;]*[mGKH]//g'"
 # alias get-env-vals="~/.local/bin/secrets.sh"
+
+# Replace the Oh My Zsh history alias with an interactive history selector.
+unalias history 2>/dev/null
+# With no arguments, select a previous command, edit it, then load it at the next prompt.
+history() {
+  if (( $# )); then
+    builtin history "$@"
+    return
+  fi
+
+  local selected command_file
+  selected="$(fc -rl 1 | fzf --height 40% --reverse --tac --no-sort)" || return
+  selected="$(sed -E 's/^[[:space:]]*[0-9]+[[:space:]]+//' <<< "$selected")"
+  [[ -n "$selected" ]] || return
+
+  command_file="$(mktemp "${TMPDIR:-/tmp}/history-command.XXXXXX")" || return
+  print -r -- "$selected" > "$command_file"
+  nvim "$command_file"
+  selected="$(<"$command_file")"
+  rm -f -- "$command_file"
+
+  [[ -n "$selected" ]] && print -z -- "$selected"
+}
 
 exif_json() {
   exiftool -json  -d "%Y-%m-%dT%H:%M:%SZ" -Make -Model -LensModel -FocalLength -ShutterSpeed -Aperture -ISO -Copyright -CreateDate "$@" | jq

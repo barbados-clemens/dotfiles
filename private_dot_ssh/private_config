@@ -6,5 +6,13 @@ Include ~/.orbstack/ssh/config
 # tart client VMs (managed by `vm`)
 Include ~/.config/vm/ssh_config
 
+Host github.com
+	HostName github.com
+	User git
+	IdentityAgent none
+	IdentityFile ~/.ssh/id_ed25519_github
+	IdentitiesOnly yes
+
 Host *
 	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+

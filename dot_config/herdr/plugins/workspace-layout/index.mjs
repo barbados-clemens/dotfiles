@@ -300,6 +300,13 @@ function contextWorkspaceCwd(env) {
     : undefined;
 }
 
+function worktreeCheckoutPath(workspace) {
+  const checkoutPath = workspace?.worktree?.checkout_path;
+  return typeof checkoutPath === "string" && checkoutPath.length > 0
+    ? checkoutPath
+    : undefined;
+}
+
 export function loadSettings({ env, workspaceCwd, pluginRoot = moduleRoot }) {
   const configDir = env.HERDR_PLUGIN_CONFIG_DIR;
   const candidates = [
@@ -429,9 +436,13 @@ export async function applyWorkspaceLayout({
     throw new Error("workspace has no initial pane");
   }
 
+  const contextCwd = contextWorkspaceCwd(env);
+  const checkoutPath = worktreeCheckoutPath(snapshot.workspace);
   const workspaceCwd =
+    (env.HERDR_PLUGIN_EVENT ? checkoutPath ?? contextCwd : undefined) ??
     initialPane.foreground_cwd ??
-    contextWorkspaceCwd(env) ??
+    contextCwd ??
+    checkoutPath ??
     initialPane.cwd;
   if (!workspaceCwd) {
     throw new Error("workspace has no working directory");

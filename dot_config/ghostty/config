@@ -11,4 +11,4 @@ theme="TokyoNight Moon"
 confirm-close-surface=false
 # font-family="Essential PragmataPro"
 font-family="BerkeleyMono Nerd Font Mono"
-keybind = shift+enter=text:\x1b\r
+keybind = alt+backspace=text:\x1b\x7f

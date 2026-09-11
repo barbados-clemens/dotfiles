@@ -3,10 +3,11 @@ import test from "node:test";
 
 import { runBootstrap } from "../scripts/bootstrap.mjs";
 
-function outputBuffer() {
+function outputBuffer({ isTTY = false } = {}) {
   let value = "";
   return {
     stream: {
+      isTTY,
       write(chunk) {
         value += chunk;
       },
@@ -53,7 +54,7 @@ test("continues after an allowed step failure and exits successfully", () => {
   });
   assert.match(
     stderr.value(),
-    /warning: cargo failed with exit code 101; continuing/,
+    /\[workspace warning\] cargo failed with exit code 101; continuing/,
   );
   assert.match(stdout.value(), /complete with 1 warning/);
 });
@@ -94,7 +95,7 @@ test("stops after a required step failure", () => {
     warnings: 0,
   });
   assert.match(stderr.value(), /pnpm failed with exit code 1/);
-  assert.doesNotMatch(stderr.value(), /warning:/);
+  assert.doesNotMatch(stderr.value(), /workspace warning/);
 });
 
 test("treats an allowed spawn error as a warning", () => {
@@ -121,7 +122,7 @@ test("treats an allowed spawn error as a warning", () => {
   assert.equal(result.warnings, 1);
   assert.match(
     stderr.value(),
-    /warning: unable to run optional: command not found; continuing/,
+    /\[workspace warning\] unable to run optional: command not found; continuing/,
   );
 });
 
@@ -275,6 +276,49 @@ test("keeps allowed failures optional when run through mise", () => {
   assert.equal(result.warnings, 1);
   assert.match(
     stderr.value(),
-    /warning: cargo failed with exit code 101; continuing/,
+    /\[workspace warning\] cargo failed with exit code 101; continuing/,
+  );
+});
+
+test("uses colored annotation badges for terminal output", () => {
+  const stdout = outputBuffer({ isTTY: true });
+  const result = runBootstrap({
+    bootstrapSteps: [
+      {
+        name: "setup",
+        files: ["setup.lock"],
+        command: ["setup", "install"],
+      },
+    ],
+    fileExists: () => true,
+    runCommand: () => ({ status: 0 }),
+    stdout: stdout.stream,
+    stderr: outputBuffer({ isTTY: true }).stream,
+    env: { TERM: "xterm-256color" },
+  });
+
+  assert.equal(result.exitCode, 0);
+  assert.match(
+    stdout.value(),
+    /\u001b\[1;30;46m workspace step \u001b\[0m setup install/,
+  );
+  assert.match(
+    stdout.value(),
+    /\u001b\[1;30;42m workspace setup \u001b\[0m complete/,
+  );
+});
+
+test("disables colored annotations when NO_COLOR is present", () => {
+  const stdout = outputBuffer({ isTTY: true });
+  runBootstrap({
+    bootstrapSteps: [],
+    stdout: stdout.stream,
+    stderr: outputBuffer({ isTTY: true }).stream,
+    env: { NO_COLOR: "", TERM: "xterm-256color" },
+  });
+
+  assert.equal(
+    stdout.value(),
+    "[workspace setup] no supported setup files found\n",
   );
 });

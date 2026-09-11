@@ -32,6 +32,10 @@ Only one JavaScript package manager runs when multiple lockfiles exist.
 Bootstrap steps marked with `allowFailure: true` report a warning and allow the
 remaining setup steps to continue. Unmarked steps remain required.
 
+Bootstrap-owned output uses colored `workspace step`, `workspace warning`,
+`workspace error`, and `workspace setup` badges so installer output remains
+visually distinct. Set `NO_COLOR` to disable ANSI colors.
+
 When a `mise.toml` or `.mise.toml` file exists, setup trusts only those exact
 workspace config files, runs `mise install`, and executes later setup commands
 through `mise exec --`. This makes newly installed tools available without
@@ -65,7 +69,7 @@ Each tab contains one existing root pane and may add splits:
             {
               "id": "agent",
               "existing": true,
-              "command": "codex"
+              "command": "pi"
             },
             {
               "id": "server",
@@ -93,12 +97,14 @@ Commands support these placeholders:
 - `{{tab_id}}`
 - `{{pane_id}}`
 
-The agent picker choices are arguments to `scripts/select-agent.sh`. For
-example:
+The agent picker choices are arguments to `scripts/select-agent.sh`. The first
+choice is the default, and Enter starts it. The built-in choices are Pi and
+Claude. If the pane has a stale `PATH`, the picker resolves a missing agent from
+the home Mise configuration. For example:
 
 ```json
 {
-  "command": "bash \"{{plugin_root}}/scripts/select-agent.sh\" codex opencode claude"
+  "command": "bash \"{{plugin_root}}/scripts/select-agent.sh\" pi claude"
 }
 ```
 
