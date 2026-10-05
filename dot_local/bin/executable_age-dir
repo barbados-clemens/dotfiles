@@ -1,0 +1,363 @@
+#!/usr/bin/env bash
+# Encrypt and decrypt directories as streamed tar archives with age.
+set -euo pipefail
+
+identity_file="$HOME/.config/chezmoi/key.txt"
+destroy_source=false
+temp_path=""
+quarantine_path=""
+original_source=""
+staged_source=""
+unverified_output=""
+hash_tool=""
+progress_available=false
+
+usage() {
+  cat <<'EOF'
+Usage:
+  age-dir encrypt [-i IDENTITY] [--destroy] DIRECTORY [ARCHIVE.tar.age]
+  age-dir decrypt [-i IDENTITY] ARCHIVE.tar.age [DIRECTORY]
+
+Options:
+  -i, --identity FILE  Use another age identity file.
+  --destroy            Remove the source after full archive verification.
+  -h, --help           Show this help.
+
+The default identity is ~/.config/chezmoi/key.txt. The default archive is
+DIRECTORY.tar.age. The default decrypted directory uses the archive name
+without .tar.age. Progress shows bytes, elapsed time, and transfer rate when
+pv is installed. --destroy removes files with rm; it does not securely erase
+storage sectors.
+EOF
+}
+
+die() {
+  printf 'age-dir: %s\n' "$*" >&2
+  exit 1
+}
+
+need() {
+  command -v "$1" >/dev/null 2>&1 || die "'$1' is required"
+}
+
+configure_progress() {
+  if command -v pv >/dev/null 2>&1; then
+    progress_available=true
+  else
+    progress_available=false
+    printf "age-dir: warning: install 'pv' to show transfer progress\n" >&2
+  fi
+}
+
+progress_stream() {
+  local label="$1"
+
+  if [ "$progress_available" = true ]; then
+    pv --wait --timer --bytes --rate --name "$label"
+  else
+    cat
+  fi
+}
+
+select_hash_tool() {
+  if command -v sha256sum >/dev/null 2>&1; then
+    hash_tool="sha256sum"
+  elif command -v shasum >/dev/null 2>&1; then
+    hash_tool="shasum"
+  else
+    die "'sha256sum' or 'shasum' is required with --destroy"
+  fi
+}
+
+hash_stream() {
+  case "$hash_tool" in
+    sha256sum) sha256sum ;;
+    shasum) shasum -a 256 ;;
+    *) return 1 ;;
+  esac
+}
+
+restore_source() {
+  local staged
+
+  [ -n "$quarantine_path" ] || return 0
+  staged="$quarantine_path/source"
+
+  if [ -e "$staged" ] || [ -L "$staged" ]; then
+    if [ ! -e "$original_source" ] && [ ! -L "$original_source" ]; then
+      if ! mv "$staged" "$original_source"; then
+        printf 'age-dir: could not restore the source; data remains at %s\n' "$staged" >&2
+        return 0
+      fi
+    else
+      printf 'age-dir: the source path was recreated; data remains at %s\n' "$staged" >&2
+      return 0
+    fi
+  fi
+
+  rmdir "$quarantine_path" 2>/dev/null || true
+}
+
+cleanup() {
+  restore_source
+  if [ -n "$unverified_output" ]; then
+    rm -f "$unverified_output"
+  fi
+  if [ -n "$temp_path" ]; then
+    rm -rf "$temp_path"
+  fi
+}
+
+stage_source_for_destroy() {
+  local source_parent
+
+  original_source="$1"
+  source_parent=$(dirname "$original_source")
+  quarantine_path=$(mktemp -d "$source_parent/.age-dir-destroy.XXXXXX")
+  staged_source="$quarantine_path/source"
+
+  if ! mv "$original_source" "$staged_source"; then
+    rmdir "$quarantine_path" 2>/dev/null || true
+    quarantine_path=""
+    original_source=""
+    staged_source=""
+    die "could not stage the source for safe removal"
+  fi
+}
+
+verify_archive_and_destroy() {
+  local output="$1"
+  local output_parent archive_hash source_hash source_name
+
+  output_parent=$(dirname "$output")
+  source_name=$(basename "$original_source")
+
+  printf 'Verifying the completed archive before source removal...\n'
+  sync || die "could not flush the archive to storage"
+  age-inspect --json "$output" >/dev/null || die "age archive inspection failed"
+
+  temp_path=$(mktemp -d "$output_parent/.age-dir-verify.XXXXXX")
+  archive_hash="$temp_path/archive.sha256"
+  source_hash="$temp_path/source.sha256"
+
+  if ! age --decrypt --identity "$identity_file" "$output" \
+    | progress_stream "Archive check" \
+    | hash_stream >"$archive_hash"; then
+    die "the completed archive could not be fully decrypted"
+  fi
+
+  if ! tar -C "$staged_source" -cf - . \
+    | progress_stream "Source check" \
+    | hash_stream >"$source_hash"; then
+    die "the source changed or could not be read during verification"
+  fi
+
+  if ! cmp -s "$archive_hash" "$source_hash"; then
+    die "the archive does not exactly match the source"
+  fi
+
+  if [ -e "$original_source" ] || [ -L "$original_source" ]; then
+    die "the source path was recreated during verification"
+  fi
+
+  unverified_output=""
+  printf 'Verified the age format, full decryption, and exact SHA-256 match.\n'
+  printf 'Removing the original directory: %s\n' "$original_source"
+
+  if ! rm -rf "$quarantine_path"; then
+    die "the archive is safe, but source removal failed"
+  fi
+  [ ! -e "$quarantine_path" ] || die "the archive is safe, but source removal was incomplete"
+
+  quarantine_path=""
+  original_source=""
+  staged_source=""
+  rm -rf "$temp_path"
+  temp_path=""
+  sync || printf 'age-dir: warning: could not flush the source removal to storage\n' >&2
+  printf 'Encrypted and removed %s -> %s\n' "$source_name" "$output"
+}
+
+trap cleanup EXIT
+trap 'exit 129' HUP
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+encrypt_directory() {
+  local source_argument="$1"
+  local source_dir="$source_argument"
+  local archive_source output="${2:-}"
+  local current_dir identity_path link_check output_parent recipient source_name
+
+  need age
+  need age-keygen
+  need tar
+  configure_progress
+
+  [ -d "$source_dir" ] || die "directory not found: $source_dir"
+  [ -f "$identity_file" ] || die "identity file not found: $identity_file"
+
+  if [ "$destroy_source" = true ]; then
+    link_check=${source_argument%/}
+    [ -n "$link_check" ] || link_check="/"
+    [ ! -L "$link_check" ] || die "--destroy does not accept a symbolic-link source"
+    need age-inspect
+    need cmp
+    need sync
+    select_hash_tool
+  fi
+
+  source_dir=$(cd "$source_dir" && pwd -P)
+  [ "$source_dir" != "/" ] || die "refusing to encrypt the root directory"
+  source_name=$(basename "$source_dir")
+  identity_path=$(cd "$(dirname "$identity_file")" && pwd -P)/$(basename "$identity_file")
+  identity_file="$identity_path"
+
+  if [ "$destroy_source" = true ]; then
+    current_dir=$(pwd -P)
+    case "$current_dir" in
+      "$source_dir"|"$source_dir"/*)
+        die "change to a directory outside the source before using --destroy"
+        ;;
+    esac
+    case "$identity_file" in
+      "$source_dir"/*)
+        die "--destroy would remove the age identity; use an identity outside the source"
+        ;;
+    esac
+  fi
+
+  if [ -z "$output" ]; then
+    output="$source_dir.tar.age"
+  fi
+
+  output_parent=$(dirname "$output")
+  [ -d "$output_parent" ] || die "output directory not found: $output_parent"
+  output_parent=$(cd "$output_parent" && pwd -P)
+  output="$output_parent/$(basename "$output")"
+  case "$output" in
+    "$source_dir"/*) die "the archive must be outside the source directory" ;;
+  esac
+  [ ! -e "$output" ] && [ ! -L "$output" ] || die "output already exists: $output"
+
+  recipient=$(age-keygen -y "$identity_file") || die "could not read the age identity"
+  [ -n "$recipient" ] || die "the age identity has no recipient"
+
+  archive_source="$source_dir"
+  if [ "$destroy_source" = true ]; then
+    stage_source_for_destroy "$source_dir"
+    archive_source="$staged_source"
+  fi
+
+  temp_path=$(mktemp "$output.tmp.XXXXXX")
+  if ! tar -C "$archive_source" -cf - . \
+    | progress_stream "Encrypting" \
+    | age --encrypt --recipient "$recipient" --output "$temp_path"; then
+    die "encryption failed"
+  fi
+
+  mv "$temp_path" "$output"
+  temp_path=""
+
+  if [ "$destroy_source" = true ]; then
+    unverified_output="$output"
+    verify_archive_and_destroy "$output"
+  else
+    printf 'Encrypted %s -> %s\n' "$source_name" "$output"
+  fi
+}
+
+decrypt_directory() {
+  local archive="$1"
+  local destination="${2:-}"
+  local destination_parent
+
+  need age
+  need tar
+  configure_progress
+
+  [ -f "$archive" ] || die "archive not found: $archive"
+  [ -f "$identity_file" ] || die "identity file not found: $identity_file"
+
+  archive=$(cd "$(dirname "$archive")" && pwd -P)/$(basename "$archive")
+  if [ -z "$destination" ]; then
+    case "$archive" in
+      *.tar.age) destination=${archive%.tar.age} ;;
+      *.age) destination=${archive%.age} ;;
+      *) destination="$archive.decrypted" ;;
+    esac
+  fi
+
+  destination_parent=$(dirname "$destination")
+  [ -d "$destination_parent" ] || die "destination parent not found: $destination_parent"
+  destination_parent=$(cd "$destination_parent" && pwd -P)
+  destination="$destination_parent/$(basename "$destination")"
+  [ ! -e "$destination" ] && [ ! -L "$destination" ] || die "destination already exists: $destination"
+
+  temp_path=$(mktemp -d "$destination_parent/.age-dir.XXXXXX")
+  if ! age --decrypt --identity "$identity_file" "$archive" \
+    | progress_stream "Decrypting" \
+    | tar -C "$temp_path" -xf -; then
+    die "decryption failed"
+  fi
+
+  [ ! -e "$destination" ] && [ ! -L "$destination" ] || die "destination already exists: $destination"
+  mv "$temp_path" "$destination"
+  temp_path=""
+  printf 'Decrypted %s -> %s\n' "$archive" "$destination"
+}
+
+operation="${1:-}"
+case "$operation" in
+  encrypt|decrypt) shift ;;
+  -h|--help|help) usage; exit 0 ;;
+  *) usage >&2; exit 2 ;;
+esac
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -i|--identity)
+      [ "$#" -ge 2 ] || die "$1 requires a file path"
+      identity_file="$2"
+      shift 2
+      ;;
+    --identity=*)
+      identity_file=${1#*=}
+      [ -n "$identity_file" ] || die "--identity requires a file path"
+      shift
+      ;;
+    --destroy)
+      destroy_source=true
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -*)
+      die "unknown option: $1"
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+if [ "$operation" = "decrypt" ] && [ "$destroy_source" = true ]; then
+  die "--destroy is only valid with encrypt"
+fi
+
+case "$operation" in
+  encrypt)
+    [ "$#" -ge 1 ] && [ "$#" -le 2 ] || { usage >&2; exit 2; }
+    encrypt_directory "$1" "${2:-}"
+    ;;
+  decrypt)
+    [ "$#" -ge 1 ] && [ "$#" -le 2 ] || { usage >&2; exit 2; }
+    decrypt_directory "$1" "${2:-}"
+    ;;
+esac

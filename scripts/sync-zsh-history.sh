@@ -18,7 +18,7 @@ total=$(wc -l < "$HISTORY_FILE")
 tmpfile=$(mktemp)
 trap 'rm -f "$tmpfile"' EXIT
 
-awk -v cutoff="$cutoff" '/^: [0-9]+:/ { ts=$2+0; keep=(ts >= cutoff) } keep { print }' "$HISTORY_FILE" > "$tmpfile"
+LC_ALL=C awk -v cutoff="$cutoff" '/^: [0-9]+:/ { ts=$2+0; keep=(ts >= cutoff) } keep { print }' "$HISTORY_FILE" > "$tmpfile"
 trimmed=$(wc -l < "$tmpfile")
 
 # Swap in trimmed history, re-add, restore original

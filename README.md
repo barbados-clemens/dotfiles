@@ -7,7 +7,12 @@
 1. Install Xcode Command Line Tools: `xcode-select --install`
 2. Sign into the Mac App Store (required for `mas` to install App Store apps)
 3. Install and sign into [1Password](https://1password.com/downloads/mac/) — enable the SSH agent under Settings > Developer
-4. Restore the age decryption key from 1Password to `~/.config/chezmoi/key.txt` (needed to decrypt fonts, AWS config, and shell history)
+4. Restore the age decryption key (1Password: Private → "Chezmoi") to `~/.config/chezmoi/key.txt` (needed to decrypt fonts, AWS config, and shell history):
+   ```sh
+   mkdir -p ~/.config/chezmoi
+   op read --account my.1password.com "op://Private/Chezmoi/password" > ~/.config/chezmoi/key.txt
+   chmod 600 ~/.config/chezmoi/key.txt
+   ```
 5. Run `gcloud auth login` if you need GCP access immediately
 
 ## Bootstrap

@@ -50,6 +50,7 @@ macos:
     - { domain: "com.apple.desktopservices", key: "DSDontWriteNetworkStores", type: "bool", value: "true" }
     - { domain: "com.apple.desktopservices", key: "DSDontWriteUSBStores", type: "bool", value: "true" }
   sudo_defaults:
+    # WARNING: Could not read /Library/Preferences/com.apple.loginwindow AdminHostInfo — keeping original
     - { domain: "/Library/Preferences/com.apple.loginwindow", key: "AdminHostInfo", type: "string", value: "HostName" }
   post_commands:
     - "sudo pmset -a standbydelay 86400"
