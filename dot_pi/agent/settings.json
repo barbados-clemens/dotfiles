@@ -1,0 +1,20 @@
+{
+  "lastChangelogVersion": "0.87.0",
+  "theme": "dark",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-6.1-sol",
+  "defaultThinkingLevel": "xhigh",
+  "packages": [
+    "npm:@plannotator/pi-extension",
+    "npm:@narumitw/pi-goal",
+    "npm:pi-mcp-adapter",
+    "npm:@tintinweb/pi-subagents",
+    "npm:@calesennett/pi-codex-fast"
+  ],
+  "hideThinkingBlock": true,
+  "shellCommandPrefix": "eval \"$(/opt/homebrew/bin/mise activate bash)\"\nexport PATH=\"$HOME/.pi/agent/bin:$PATH\"",
+  "pi-codex-fast": {
+    "enabled": true,
+    "mode": "ultrafast"
+  }
+}
